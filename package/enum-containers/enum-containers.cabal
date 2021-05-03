@@ -1,0 +1,116 @@
+cabal-version:       3.0
+build-type:          Custom
+
+name:                enum-containers
+version:             0.1.0.0
+license:             Apache-2.0 OR MPL-2.0
+license-file:        LICENSE
+copyright:           (c) 2021 Mizunashi Mana
+author:              Mizunashi Mana
+maintainer:          mizunashi-mana@noreply.git
+
+category:            Data Structures
+homepage:            https://github.com/mizunashi-mana/enum-containers
+bug-reports:         https://github.com/mizunashi-mana/enum-containers/issues
+synopsis:            Enum wrappers for containers
+description:
+    This package provide some wrappers for containers. These wrappers allow
+    you use Enum types as Int.
+
+extra-source-files:
+    README.md
+    CHANGELOG.md
+
+source-repository head
+  type:     git
+  location: https://github.com/mizunashi-mana/enum-containers.git
+
+flag develop
+    default:     False
+    manual:      True
+    description: Turn on some options for development
+
+common general
+    default-language:
+        Haskell2010
+
+    default-extensions:
+        BangPatterns
+        RoleAnnotations
+
+    if flag(develop)
+        ghc-options:
+            -Wall
+            -Wcompat
+            -Wincomplete-uni-patterns
+            -Wmonomorphism-restriction
+            -Wpartial-fields
+
+            -fprint-explicit-foralls
+            -frefinement-level-hole-fits=1
+
+            -dcore-lint
+
+    build-depends:
+        base,
+
+        -- project depends
+        containers,
+        deepseq,
+
+    autogen-modules:
+        Paths_enum_containers
+    other-modules:
+        Paths_enum_containers
+
+custom-setup
+    setup-depends:
+        base,
+        Cabal,
+        cabal-doctest,
+
+library
+    import:
+        general,
+    hs-source-dirs:
+        src
+    exposed-modules:
+        Data.EnumSet
+        -- Data.EnumMap.Strict
+        -- Data.EnumMap.Lazy
+
+test-suite doctest
+    import:
+        general,
+    type:
+        exitcode-stdio-1.0
+    hs-source-dirs:
+        test/doctest
+    main-is:
+        Doctest.hs
+    build-depends:
+        doctest,
+        QuickCheck,
+    autogen-modules:
+        Build_doctests
+    other-modules:
+        Build_doctests
+
+test-suite spec
+    import:
+        general,
+    type:
+        exitcode-stdio-1.0
+    hs-source-dirs:
+        test/spec
+    main-is:
+        HSpecDriver.hs
+    ghc-options:
+        -Wno-missing-home-modules
+    build-tool-depends:
+        hspec-discover:hspec-discover,
+    build-depends:
+        enum-containers,
+
+        hspec,
+        QuickCheck,
